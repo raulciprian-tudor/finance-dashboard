@@ -4,18 +4,19 @@
   </div>
 
   <div class="px-2 pt-10">
-    <form class="flex flex-col flex-wrap flex-grow gap-2">
+    <form class="flex flex-col flex-wrap flex-grow gap-2" (ngSubmit)="login()">
       <label
         class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2">
         Email
-        <input type="email" class="grow" placeholder="john.doe@email.com" />
+        <input type="email" class="grow" placeholder="john.doe@email.com" name="email" [(ngModel)]="email" />
       </label>
       <label
         class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2">
         Password
-        <input type="password" class="grow" placeholder="********" autocomplete="new-password" />
+        <input type="password" class="grow" placeholder="********" autocomplete="new-password" name="password"
+               [(ngModel)]="password" />
       </label>
-      <button class="btn bg-blue-500 text-white w-full my-4">
+      <button type="submit" class="btn bg-blue-500 text-white w-full my-4">
         Sign In
       </button>
     </form>
