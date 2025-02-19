@@ -1,0 +1,4 @@
+.facebook:hover, .google:hover, .apple:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
