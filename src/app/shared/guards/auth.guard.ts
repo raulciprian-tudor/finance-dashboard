@@ -6,6 +6,7 @@ import {
   MaybeAsync,
   Router,
   RouterStateSnapshot,
+  UrlTree,
 } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ROUTER_TOKENS } from '../../app.routes';
@@ -20,12 +21,9 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): boolean {
-    if (this.authService.isAuthenticated()) {
-      return true;
-    } else {
-      this.router.navigate([ROUTER_TOKENS.LOGIN]);
-      return false;
-    }
+  ): boolean | UrlTree {
+    return this.authService.isAuthenticated()
+      ? true
+      : this.router.parseUrl(ROUTER_TOKENS.LOGIN);
   }
 }
