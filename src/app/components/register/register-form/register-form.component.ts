@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-register-form',
@@ -18,6 +19,7 @@ import { CommonModule } from '@angular/common';
 })
 export class RegisterFormComponent implements OnInit {
   private fb: FormBuilder = inject(FormBuilder);
+  private authService: AuthService = inject(AuthService);
 
   registerForm: FormGroup;
   registerError: string | null = null;
@@ -61,13 +63,19 @@ export class RegisterFormComponent implements OnInit {
   onSubmit(): void {
     if (this.registerForm.valid) {
       const { firstName, lastName, email, password } = this.registerForm.value;
-      console.log(
-        'User registered with the following info: ',
-        firstName,
-        lastName,
-        email,
-        password
-      );
+      this.authService.register(email, password).subscribe({
+        next: (success: boolean): void => {
+          if (success) {
+            console.log('User registered successfully');
+          } else {
+            console.error('Error registering user');
+          }
+        },
+        error: (error: any): void => {
+          console.error('Error registering user: ', error);
+          this.registerError = error.message;
+        },
+      });
     } else {
       this.registerForm.markAllAsTouched();
       return;

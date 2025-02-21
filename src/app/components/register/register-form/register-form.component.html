@@ -5,7 +5,7 @@
   </div>
 
   <div class="px-2 pt-10">
-    <form [formGroup]="registerForm" class="flex flex-col flex-wrap flex-grow gap-2">
+    <form [formGroup]="registerForm" class="flex flex-col flex-wrap flex-grow gap-2" (ngSubmit)="onSubmit()">
       <label
         class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2"
         [ngClass]="{'focus-within:border-red-500 border-red-500': (registerForm.get('firstName')?.hasError('required') || registerForm.get('firstName')?.hasError('firstName')) && registerForm.controls['firstName'].touched}">
