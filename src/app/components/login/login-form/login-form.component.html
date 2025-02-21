@@ -7,24 +7,24 @@
     <form [formGroup]="loginForm" class="flex flex-col flex-wrap flex-grow gap-2" (ngSubmit)="onSubmit()">
       <label
         class="input input-bordered flex items-center pe-0 gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2"
-        [ngClass]="{'focus-within:border-red-500 border-red-500': (loginForm.get('email')!.hasError('required') || loginForm.get('email')!.hasError('email')) && loginForm.controls['email'].touched}"
+        [ngClass]="{'focus-within:border-red-500 border-red-500': (loginForm.get('email')?.hasError('required') || loginForm.get('email')?.hasError('email')) && loginForm.controls['email'].touched}"
       >
         Email
         <input type="email" class="grow border-s-1 border-s-slate-300 ps-2" placeholder="john.doe@email.com"
                name="email"
                formControlName="email" />
       </label>
-      @if ((loginForm.controls['email'].touched) && loginForm.get('email')!.errors) {
-        @if (loginForm.get('email')!.hasError('required')) {
-          <span class="text-red-500 px-2">Email is required.</span>
+      @if ((loginForm.controls['email'].touched) && loginForm.get('email')?.errors) {
+        @if (loginForm.get('email')?.hasError('required')) {
+          <span class="text-red-500 px-2 text-sm">Email is required.</span>
         }
-        @if (loginForm.get('email')!.hasError('email')) {
-          <span class="text-red-500 px-2">Enter a valid email.</span>
+        @if (loginForm.get('email')?.hasError('email')) {
+          <span class="text-red-500 px-2 text-sm">Enter a valid email.</span>
         }
       }
       <label
         class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2"
-        [ngClass]="{'focus-within:border-red-500 border-red-500': loginForm.get('password')!.hasError('required') && loginForm.controls['password'].touched}">
+        [ngClass]="{'focus-within:border-red-500 border-red-500': loginForm.get('password')?.hasError('required') && loginForm.controls['password'].touched}">
         Password
         <input type="password" class="grow border-s-1 border-s-slate-300 ps-2" placeholder="********"
                autocomplete="new-password" name="password"
@@ -32,16 +32,16 @@
       </label>
 
       <!-- Specific error messages for password -->
-      @if (loginForm.controls['password'].touched && loginForm.get('password')!.errors) {
-        @if (loginForm.get('password')!.hasError('required')) {
-          <span class="px-2 text-red-500">
-                Password is required.
-              </span>
+      @if (loginForm.controls['password'].touched && loginForm.get('password')?.errors) {
+        @if (loginForm.get('password')?.hasError('required')) {
+          <span class="px-2 text-red-500 text-sm">
+            Password is required.
+          </span>
         }
       }
       <!-- Display login error  -->
       @if (loginError) {
-        <div class="px-2 text-center text-red-500">
+        <div class="px-2 text-center text-red-500 text-sm">
           {{ loginError }}
         </div>
       }

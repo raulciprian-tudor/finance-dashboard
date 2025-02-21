@@ -31,11 +31,11 @@ export class LoginFormComponent implements OnInit {
     this.loginForm = this.fb.group({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email],
-        updateOn: 'blur',
+        updateOn: 'change',
       }),
       password: new FormControl('', {
         validators: [Validators.required],
-        updateOn: 'blur',
+        updateOn: 'change',
       }),
     });
   }
