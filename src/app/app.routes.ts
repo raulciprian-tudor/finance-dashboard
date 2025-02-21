@@ -31,6 +31,11 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard],
   },
   {
+    path: '',
+    redirectTo: ROUTER_TOKENS.LOGIN,
+    pathMatch: 'full',
+  },
+  {
     path: '**',
     redirectTo: ROUTER_TOKENS.DASHBOARD,
   },

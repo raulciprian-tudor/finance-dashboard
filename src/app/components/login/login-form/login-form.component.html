@@ -4,21 +4,58 @@
   </div>
 
   <div class="px-2 pt-10">
-    <form class="flex flex-col flex-wrap flex-grow gap-2" (ngSubmit)="login()">
+    <form [formGroup]="loginForm" class="flex flex-col flex-wrap flex-grow gap-2" (ngSubmit)="onSubmit()">
       <label
-        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2">
+        class="input input-bordered flex items-center pe-0 gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2"
+        [ngClass]="{'focus-within:border-red-500 border-red-500': (loginForm.get('email')!.hasError('required') || loginForm.get('email')!.hasError('email')) && loginForm.controls['email'].touched}"
+      >
         Email
-        <input type="email" class="grow" placeholder="john.doe@email.com" name="email" [(ngModel)]="email" />
+        <input type="email" class="grow border-s-1 border-s-slate-300 ps-2" placeholder="john.doe@email.com"
+               name="email"
+               formControlName="email" />
       </label>
+      @if ((loginForm.controls['email'].touched) && loginForm.get('email')!.errors) {
+        @if (loginForm.get('email')!.hasError('required')) {
+          <span class="text-red-500 px-2">Email is required.</span>
+        }
+        @if (loginForm.get('email')!.hasError('email')) {
+          <span class="text-red-500 px-2">Enter a valid email.</span>
+        }
+      }
       <label
-        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2">
+        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2"
+        [ngClass]="{'focus-within:border-red-500 border-red-500': loginForm.get('password')!.hasError('required') && loginForm.controls['password'].touched}">
         Password
-        <input type="password" class="grow" placeholder="********" autocomplete="new-password" name="password"
-               [(ngModel)]="password" />
+        <input type="password" class="grow border-s-1 border-s-slate-300 ps-2" placeholder="********"
+               autocomplete="new-password" name="password"
+               formControlName="password" />
       </label>
-      <button type="submit" class="btn bg-blue-500 text-white w-full my-4">
-        Sign In
-      </button>
+
+      <!-- Specific error messages for password -->
+      @if (loginForm.controls['password'].touched && loginForm.get('password')!.errors) {
+        @if (loginForm.get('password')!.hasError('required')) {
+          <span class="px-2 text-red-500">
+                Password is required.
+              </span>
+        }
+      }
+      <!-- Display login error  -->
+      @if (loginError) {
+        <div class="px-2 text-center text-red-500">
+          {{ loginError }}
+        </div>
+      }
+
+      @if (loginForm.invalid) {
+        <button type="submit" class="btn bg-blue-500 text-white w-full my-4" disabled>
+          Sign In
+        </button>
+      } @else {
+        <button type="submit" class="btn bg-blue-500 text-white w-full my-4">
+          Sign In
+        </button>
+      }
+
     </form>
   </div>
 
@@ -37,6 +74,8 @@
   </div>
 
   <div class="px-2 mt-10 text-center">
-    <span>Don't have an account? <a routerLink="/register" class="text-blue-500 decoration-0 font-semibold">Sign up</a></span>
+    <span>
+      Don't have an account? <a routerLink="/register" class="text-blue-500 decoration-0 font-semibold">Sign up</a>
+    </span>
   </div>
 </div>

@@ -1,28 +1,73 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import {
+  FormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  FormControl,
+} from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ROUTER_TOKENS } from '../../../app.routes';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login-form',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink, ReactiveFormsModule, CommonModule],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.css',
 })
-export class LoginFormComponent {
-  email = '';
-  password = '';
-  errorMessage = '';
-
+export class LoginFormComponent implements OnInit {
   private authService: AuthService = inject(AuthService);
+  private fb: FormBuilder = inject(FormBuilder);
   private router: Router = inject(Router);
 
-  login(): void {
-    if (this.authService.login(this.email, this.password)) {
-      this.router.navigate([ROUTER_TOKENS.DASHBOARD]);
+  loginForm: FormGroup;
+  loginError: string | null = null;
+
+  constructor() {
+    this.loginForm = this.fb.group({
+      email: new FormControl('', {
+        validators: [Validators.required, Validators.email],
+        updateOn: 'blur',
+      }),
+      password: new FormControl('', {
+        validators: [Validators.required],
+        updateOn: 'blur',
+      }),
+    });
+  }
+
+  ngOnInit() {
+    this.loginForm.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe(() => {
+        if (this.loginError) {
+          this.loginError = null;
+        }
+      });
+  }
+
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      const { email, password } = this.loginForm.value;
+      this.authService.login(email, password).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.router.navigate([ROUTER_TOKENS.DASHBOARD]);
+          } else {
+            this.loginError = 'Login failed. Please try again.';
+          }
+        },
+        error: (err: any) => {
+          this.loginError = 'Login failed. Please try again.';
+        },
+      });
     } else {
-      this.errorMessage = 'Invalid email or password';
+      this.loginForm.markAllAsTouched();
+      return;
     }
   }
 }
