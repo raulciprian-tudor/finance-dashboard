@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { delay, Observable, of, tap } from 'rxjs';
+import { catchError, delay, from, map, Observable, of, tap } from 'rxjs';
 
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword  } from 'firebase/auth';
 import { firebaseAuth } from '../../firebase/firebase.config';
 
 @Injectable({
@@ -11,23 +11,23 @@ export class AuthService {
   private authenticated = false;
 
   login(email: string, password: string): Observable<boolean> {
-    return of(email === 'john.doe@gmail.com' && password === 'password').pipe(
-      // modificherei il delay, da 1000 magari a 500, testa un attimo e vedi come cambia
-      delay(1000),
-      tap((success: boolean): void => {
-        if (success) {
-          this.authenticated = true;
-        } else {
-          this.authenticated = false;
-        }
-      })
+    return from(signInWithEmailAndPassword(firebaseAuth, email, password)).pipe(
+      delay(500),
+      tap(():void => {
+        this.authenticated = true;
+      }),
+      catchError((): Observable<boolean> => {
+        this.authenticated = false;
+        return of(false);
+      }),
+      map(():boolean => true)
     );
   }
 
+
   register(email: string, password: string): Observable<boolean> {
     return of(true).pipe(
-      // modificherei il delay, da 1000 magari a 500, testa un attimo e vedi come cambia
-      delay(1000),
+      delay(500),
       tap((success: boolean): void => {
         if (success) {
           createUserWithEmailAndPassword(firebaseAuth, email, password);
