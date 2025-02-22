@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormControl,
@@ -20,6 +20,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 export class RegisterFormComponent implements OnInit {
   private fb: FormBuilder = inject(FormBuilder);
   private authService: AuthService = inject(AuthService);
+  private router: Router = inject(Router);
 
   registerForm: FormGroup;
   registerError: string | null = null;
@@ -67,6 +68,8 @@ export class RegisterFormComponent implements OnInit {
         next: (success: boolean): void => {
           if (success) {
             console.log('User registered successfully');
+            // add a modal or something to tell the user that he has been registered successfully!
+            this.router.navigate(['/login']);
           } else {
             console.error('Error registering user');
           }
