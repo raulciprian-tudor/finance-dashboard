@@ -70,4 +70,49 @@ export class LoginFormComponent implements OnInit {
       return;
     }
   }
+
+  googleLogin(): void {
+    this.authService.loginWithGoogle().subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.router.navigate([ROUTER_TOKENS.DASHBOARD]);
+        } else {
+          this.loginError = 'Login failed. Please try again.';
+        }
+      },
+      error: (err: any) => {
+        this.loginError = 'Login failed. Please try again.';
+      },
+    });
+  }
+
+  // facebookLogin(): void {
+  //   this.authService.loginWithFacebook().subscribe({
+  //     next: (res: any) => {
+  //       if (res) {
+  //         this.router.navigate([ROUTER_TOKENS.DASHBOARD]);
+  //       } else {
+  //         this.loginError = 'Login failed. Please try again.';
+  //       }
+  //     },
+  //     error: (err: any) => {
+  //       this.loginError = 'Login failed. Please try again.';
+  //     },
+  //   });
+  // }
+  //
+  // appleLogin(): void {
+  //   this.authService.loginWithApple().subscribe({
+  //     next: (res: any) => {
+  //       if (res) {
+  //         this.router.navigate([ROUTER_TOKENS.DASHBOARD]);
+  //       } else {
+  //         this.loginError = 'Login failed. Please try again.';
+  //       }
+  //     },
+  //     error: (err: any) => {
+  //       this.loginError = 'Login failed. Please try again.';
+  //     },
+  //   });
+  // }
 }

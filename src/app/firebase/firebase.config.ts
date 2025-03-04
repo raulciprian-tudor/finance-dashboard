@@ -1,8 +1,11 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  OAuthProvider,
+} from 'firebase/auth';
 import { environment } from '../../environments/environment.development';
-
 
 const firebaseConfig = {
   apiKey: environment.apiKey,
@@ -15,5 +18,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const firebaseDB = getFirestore(app);
 export const firebaseAuth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+export const facebookProvider = new FacebookAuthProvider();
+export const appleProvider = new OAuthProvider('apple.com');
