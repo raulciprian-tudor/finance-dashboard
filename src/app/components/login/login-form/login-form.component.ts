@@ -57,9 +57,11 @@ export class LoginFormComponent implements OnInit {
         next: (res: boolean): void => {
           if (res) {
             this.router.navigate([ROUTER_TOKENS.DASHBOARD]).then((): void => {
+              sessionStorage.setItem('authenticated', 'true');
               console.log('Navigated to dashboard');
             });
           } else {
+            sessionStorage.removeItem('authenticated');
             this.loginError = 'Login failed. Please try again.';
           }
         },

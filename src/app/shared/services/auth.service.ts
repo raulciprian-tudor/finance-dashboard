@@ -23,8 +23,6 @@ import { firebaseAuth, googleProvider } from '../../firebase/firebase.config';
   providedIn: 'root',
 })
 export class AuthService {
-  private authenticated = false;
-
   private setPersistence(): Observable<void> {
     return from(setPersistence(firebaseAuth, browserSessionPersistence));
   }
@@ -37,10 +35,10 @@ export class AuthService {
         ).pipe(
           delay(500),
           tap((): void => {
-            this.authenticated = true;
+            sessionStorage.setItem('authenticated', 'true');
           }),
           catchError((): Observable<boolean> => {
-            this.authenticated = false;
+            sessionStorage.removeItem('authenticated');
             return of(false);
           }),
           map((): boolean => true)
@@ -55,10 +53,10 @@ export class AuthService {
         return from(signInWithPopup(firebaseAuth, googleProvider)).pipe(
           delay(500),
           tap((): void => {
-            this.authenticated = true;
+            sessionStorage.setItem('authenticated', 'true');
           }),
           catchError((): Observable<boolean> => {
-            this.authenticated = false;
+            sessionStorage.removeItem('authenticated');
             return of(false);
           }),
           map((): boolean => true)
@@ -79,10 +77,9 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return this.authenticated;
+    return (
+      typeof window !== 'undefined' &&
+      sessionStorage.getItem('authenticated') === 'true'
+    );
   }
-
-  // logout(): void {
-  //   this.authenticated = false;
-  // }
 }
