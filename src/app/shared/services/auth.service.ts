@@ -25,12 +25,12 @@ import { firebaseAuth, googleProvider } from '../../firebase/firebase.config';
 export class AuthService {
   private authenticated = false;
 
-  private setPersistenceMode(): Observable<void> {
+  private setPersistence(): Observable<void> {
     return from(setPersistence(firebaseAuth, browserSessionPersistence));
   }
 
   login(email: string, password: string): Observable<boolean> {
-    return this.setPersistenceMode().pipe(
+    return this.setPersistence().pipe(
       switchMap((): Observable<boolean> => {
         return from(
           signInWithEmailAndPassword(firebaseAuth, email, password)
@@ -50,16 +50,20 @@ export class AuthService {
   }
 
   loginWithGoogle(): Observable<boolean> {
-    return from(signInWithPopup(firebaseAuth, googleProvider)).pipe(
-      delay(500),
-      tap((): void => {
-        this.authenticated = true;
-      }),
-      catchError((): Observable<boolean> => {
-        this.authenticated = false;
-        return of(false);
-      }),
-      map((): boolean => true)
+    return this.setPersistence().pipe(
+      switchMap((): Observable<boolean> => {
+        return from(signInWithPopup(firebaseAuth, googleProvider)).pipe(
+          delay(500),
+          tap((): void => {
+            this.authenticated = true;
+          }),
+          catchError((): Observable<boolean> => {
+            this.authenticated = false;
+            return of(false);
+          }),
+          map((): boolean => true)
+        );
+      })
     );
   }
 
