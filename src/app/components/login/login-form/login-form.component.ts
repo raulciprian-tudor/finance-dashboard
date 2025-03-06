@@ -40,10 +40,10 @@ export class LoginFormComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loginForm.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe(() => {
+      .subscribe((): void => {
         if (this.loginError) {
           this.loginError = null;
         }
@@ -54,14 +54,16 @@ export class LoginFormComponent implements OnInit {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe({
-        next: (res: any) => {
+        next: (res: boolean): void => {
           if (res) {
-            this.router.navigate([ROUTER_TOKENS.DASHBOARD]);
+            this.router.navigate([ROUTER_TOKENS.DASHBOARD]).then((): void => {
+              console.log('Navigated to dashboard');
+            });
           } else {
             this.loginError = 'Login failed. Please try again.';
           }
         },
-        error: (err: any) => {
+        error: (): void => {
           this.loginError = 'Login failed. Please try again.';
         },
       });
@@ -73,46 +75,18 @@ export class LoginFormComponent implements OnInit {
 
   googleLogin(): void {
     this.authService.loginWithGoogle().subscribe({
-      next: (res: any) => {
+      next: (res: boolean): void => {
         if (res) {
-          this.router.navigate([ROUTER_TOKENS.DASHBOARD]);
+          this.router.navigate([ROUTER_TOKENS.DASHBOARD]).then((): void => {
+            console.log('Navigated to dashboard');
+          });
         } else {
           this.loginError = 'Login failed. Please try again.';
         }
       },
-      error: (err: any) => {
+      error: (): void => {
         this.loginError = 'Login failed. Please try again.';
       },
     });
   }
-
-  // facebookLogin(): void {
-  //   this.authService.loginWithFacebook().subscribe({
-  //     next: (res: any) => {
-  //       if (res) {
-  //         this.router.navigate([ROUTER_TOKENS.DASHBOARD]);
-  //       } else {
-  //         this.loginError = 'Login failed. Please try again.';
-  //       }
-  //     },
-  //     error: (err: any) => {
-  //       this.loginError = 'Login failed. Please try again.';
-  //     },
-  //   });
-  // }
-  //
-  // appleLogin(): void {
-  //   this.authService.loginWithApple().subscribe({
-  //     next: (res: any) => {
-  //       if (res) {
-  //         this.router.navigate([ROUTER_TOKENS.DASHBOARD]);
-  //       } else {
-  //         this.loginError = 'Login failed. Please try again.';
-  //       }
-  //     },
-  //     error: (err: any) => {
-  //       this.loginError = 'Login failed. Please try again.';
-  //     },
-  //   });
-  // }
 }
