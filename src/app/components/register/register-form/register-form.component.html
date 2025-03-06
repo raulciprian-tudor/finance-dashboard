@@ -5,48 +5,81 @@
   </div>
 
   <div class="px-2 pt-10">
-    <form class="flex flex-col flex-wrap flex-grow gap-2">
+    <form [formGroup]="registerForm" class="flex flex-col flex-wrap flex-grow gap-2" (ngSubmit)="onSubmit()">
       <label
-        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2">
+        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2"
+        [ngClass]="{'focus-within:border-red-500 border-red-500': (registerForm.get('firstName')?.hasError('required') || registerForm.get('firstName')?.hasError('firstName')) && registerForm.controls['firstName'].touched}">
         First Name
-        <input type="text" class="grow" placeholder="John" />
+        <input type="text" class="grow border-s-1 border-s-slate-300 ps-2" placeholder="John"
+               formControlName="firstName" />
       </label>
+      @if ((registerForm.controls['firstName'].touched) && registerForm.get('firstName')?.errors) {
+        @if (registerForm.get('firstName')?.hasError('required')) {
+          <span class="text-red-500 px-2 text-sm">First name is required.</span>
+        }
+      }
       <label
-        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2">
+        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2"
+        [ngClass]="{'focus-within:border-red-500 border-red-500': (registerForm.get('lastName')?.hasError('required') || registerForm.get('lastName')?.hasError('lastName')) && registerForm.controls['lastName'].touched}"
+      >
         Last Name
-        <input type="text" class="grow" placeholder="Doe" />
+        <input type="text" class="grow border-s-1 border-s-slate-300 ps-2" placeholder="Doe"
+               formControlName="lastName" />
       </label>
+      @if (registerForm.controls['lastName'].touched && registerForm.get('lastName')?.errors) {
+        @if (registerForm.get('lastName')?.hasError('required')) {
+          <span class="text-red-500 px-2 text-sm">Last name is required.</span>
+        }
+      }
       <label
-        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2">
+        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2 pe-0"
+        [ngClass]="{'focus-within:border-red-500 border-red-500': (registerForm.get('email')?.hasError('required') || registerForm.get('email')?.hasError('email')) && registerForm.controls['email'].touched}"
+      >
         Email
-        <input type="email" class="grow" placeholder="john.doe@email.com" />
+        <input type="email" class="grow border-s-1 border-s-slate-300 ps-2" placeholder="john.doe@email.com"
+               formControlName="email" />
       </label>
+      @if ((registerForm.controls['email'].touched) && registerForm.get('email')!.errors) {
+        @if (registerForm.get('email')!.hasError('required')) {
+          <span class="text-red-500 px-2 text-sm">Email is required.</span>
+        }
+        @if (registerForm.get('email')!.hasError('email')) {
+          <span class="text-red-500 px-2 text-sm">Enter a valid email.</span>
+        }
+      }
       <label
-        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2">
+        class="input input-bordered flex items-center gap-2 focus-within:outline-0 focus-within:border-blue-500 focus-within:border-2"
+        [ngClass]="{'focus-within:border-red-500 border-red-500': (registerForm.get('password')?.hasError('required') || registerForm.get('password')?.hasError('pattern') || registerForm.get('password')?.hasError('password')) && registerForm.controls['password'].touched}"
+      >
         Password
-        <input type="password" class="grow" placeholder="********" autocomplete="new-password" />
+        <input type="password" class="grow border-s-1 border-s-slate-300 ps-2" placeholder="********"
+               autocomplete="new-password" formControlName="password" />
       </label>
-      <button class="btn bg-blue-500 text-white w-full my-4">
-        Sign up
-      </button>
+      @if (registerForm.controls['password'].touched && registerForm.get('password')!.errors) {
+        @if (registerForm.get('password')!.hasError('required')) {
+          <span class="px-2 text-red-500 text-sm">
+            Password is required.
+          </span>
+        }
+        @if (registerForm.get('password')?.hasError('pattern')) {
+          <span class="px-2 text-red-500 text-sm" style="max-width: 320px">
+            Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.
+          </span>
+        }
+      }
+      @if (registerForm.invalid) {
+        <button class="btn bg-blue-500 text-white w-full my-4" disabled>
+          Sign up
+        </button>
+      } @else {
+        <button class="btn bg-blue-500 text-white w-full my-4">
+          Sign up
+        </button>
+      }
     </form>
   </div>
 
-  <div class="divider px-2 text-sm text-slate-400">or sign up with</div>
-
-  <div class="social-buttons px-2 flex justify-around gap-2">
-    <div class="google w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-      <span class="fa fa-google text-white !text-2xl"></span>
-    </div>
-    <div class="facebook w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-      <span class="fa fa-facebook text-white !text-2xl"></span>
-    </div>
-    <div class="apple w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-      <span class="fa fa-apple text-white !text-2xl"></span>
-    </div>
-  </div>
-
-  <div class="px-2 mt-10 text-center">
+  <div class="px-2 mt-1 text-center">
     <span>Have an account? <a routerLink="/login" class="text-blue-500 decoration-0 font-semibold">Sign in</a></span>
   </div>
 </div>
